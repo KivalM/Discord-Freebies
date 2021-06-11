@@ -137,7 +137,7 @@ impl EventHandler for Handler {
 }
 
 async fn bot() {
-    let token = "NzM1MDg1NzcxODE5NzEyNTgy.XxbH-Q.ZPTosJeqDjejYuFghgAe__9dI-g";
+    let token = "";
 
     let mut client = Client::builder(&token)
         .event_handler(Handler)
