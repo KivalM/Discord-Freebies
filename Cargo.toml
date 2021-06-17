@@ -14,8 +14,3 @@ color-eyre = "0.5"
 serenity = { default-features = false, features = ["client", "gateway", "rustls_backend", "model"]}
 async-std = "1.0"
 
-[profile.release]
-opt-level = 'z'
-lto = true
-codegen-units = 1
-panic = 'abort'

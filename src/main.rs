@@ -30,7 +30,8 @@ fn read_name() -> String {
 }
 
 async fn get_games() -> Vec<String> {
-    let caps = DesiredCapabilities::firefox();
+    let mut caps = DesiredCapabilities::firefox();
+    let _ = caps.add_firefox_arg("--headless");
     let driver = WebDriver::new("http://localhost:4444/wd/hub", &caps)
         .await
         .unwrap();
@@ -102,7 +103,7 @@ struct Handler;
 #[async_trait]
 impl EventHandler for Handler {
     async fn message(&self, ctx: Context, msg: Message) {
-        if msg.content == ".Ping" {
+        if msg.content == ".ping" {
             if let Err(why) = msg.channel_id.say(&ctx.http, "Pong!").await {
                 println!("Error sending message: {:?}", why);
             }
@@ -120,10 +121,21 @@ impl EventHandler for Handler {
         } else if msg.content == ".update" {
             let _ = msg.react(&ctx.http, ReactionType::from('👍')).await;
             cahnnels(ctx).await;
-        } else if msg.content == ".kill" {
+        } else if msg.content == ".kys" {
             let _ = msg.react(&ctx.http, ReactionType::from('😔')).await;
-            println!("It's getting dark...");
+            let _ = msg.channel_id.say(&ctx.http, "It's getting dark...").await;
             exit(0);
+        } else if msg.content.starts_with(".say") {
+            println!("here");
+            let _ = msg.react(&ctx.http, ReactionType::from('👍')).await;
+            let new = msg.content.split_once(" ").unwrap().1;
+            let data = new.split_once(" ").unwrap();
+            let channel = data.0;
+            let message = data.1;
+            println!("{} {}", message, channel);
+            let id: u64 = channel.parse().unwrap_or(0);
+            println!("{}", id);
+            send_message(ctx, id, message.to_owned()).await;
         }
     }
 
@@ -137,7 +149,7 @@ impl EventHandler for Handler {
 }
 
 async fn bot() {
-    let token = "";
+    let token = "NzM1MDg1NzcxODE5NzEyNTgy.XxbH-Q.NrcGUuYB39_jeePlLHF--AMW_T0";
 
     let mut client = Client::builder(&token)
         .event_handler(Handler)
