@@ -31,8 +31,8 @@ fn read_name() -> String {
 
 async fn get_games() -> Vec<String> {
     let mut caps = DesiredCapabilities::firefox();
-    let _ = caps.add_firefox_arg("--headless");
-    let driver = WebDriver::new("http://localhost:4444/wd/hub", &caps)
+    //let _ = caps.add_firefox_arg("--headless");
+    let driver = WebDriver::new("http://localhost:4446/wd/hub", &caps)
         .await
         .unwrap();
     //navigate to url
